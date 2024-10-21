@@ -5,6 +5,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\admin\AdminCon;
 use App\Http\Controllers\admin\SKMCon;
 
+// Route home (sementara)
+Route::redirect('/', 'admin', 301);
+
 // Route Admin
 Route::prefix('admin')->group(function () {
     Route::controller(AdminCon::class)->group(function () {
