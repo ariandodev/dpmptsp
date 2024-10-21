@@ -11,4 +11,4 @@ Website dibuat dengan tujuan awal sebagai prototype Website SKM Mal Pelayanan Pu
 1. Instal composer (jika belum ada)
 2. Clone project ke server
 3. cd ke folder project lalu jalankan "composer install"
-4. Siapkan database dengan nama sesuai dengan fi file .env, kemudian jalankan perintah "php artisan migrate"
+4. Siapkan database, kemudian jalankan perintah "php artisan migrate"
