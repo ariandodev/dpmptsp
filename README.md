@@ -5,4 +5,10 @@ Website dibuat dengan tujuan awal sebagai Website SKM Mal Pelayanan Publik (MPP)
 ## Spesifikasi Teknis
 1. Arsitektur Website: Monolith
 2. Serverside Framework: Laravel 11
-3. Database: SQL 
+3. Database: MariaDB (SQL)
+
+## Cara Instalasi
+1. Instal composer (jika belum ada)
+2. Clone project ke server
+3. cd ke folder project lalu jalankan "composer install"
+4. Siapkan database dengan nama sesuai dengan fi file .env, kemudian jalankan perintah "php artisan migrate"
