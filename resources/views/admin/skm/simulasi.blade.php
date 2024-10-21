@@ -46,8 +46,13 @@
                             </div><br>
                             <div class="col-md-6">
                                 <label for="input-usia" class="form-label">Usia (dalam tahun)</label>
-                                <input type="number" class="form-control" id="input-usia" aria-label="Masukan usia anda" aria-describedby="input-usia-validasi">
-                                <div class="invalid-feedback">Usia wajib diisi!</div>
+                                <select class="form-select" id="input-usia" aria-label="Masukan usia anda" aria-describedby="input-usia-validasi">
+                                    <option value="">...</option>
+                                    @for ($i = 17; $i < 100; $i++)
+                                    <option value="{{$i}}">{{$i}}</option>
+                                    @endfor
+                                </select>
+                                <div class="invalid-feedback">Data usia wajib diisi!</div>
                             </div>
                         </div>
                         <br>
