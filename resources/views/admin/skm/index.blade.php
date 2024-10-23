@@ -22,7 +22,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title text-center">Hasil Penilaian SKM MPP (Ongoing):</h2>
+                    <h2 class="card-title text-center">Hasil Penilaian SKM (Ongoing):</h2>
                     <h3 class="text-center"><b>Nilai IKM: {{ $nilai_ikm_berjalan }}, Mutu Pelayanan: {{ $mutu_pelayanan }}, Kinerja Pelayanan: {{ $kinerja_pelayanan }}</b></h3>
                     <br>
                     <form id="form-laporan" method="POST" action="{{ route('admin.skm.buatLaporanSKM') }}">
