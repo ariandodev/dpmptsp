@@ -12,13 +12,13 @@ use App\Models\SKM\SKMPilihanJawaban;
 use App\Models\SKM\SKMUnitLayanan;
 use App\Models\SKM\SKMLayanan;
 use App\Models\SKM\SKMResponden;
-use App\Models\SKM\SKMJawabanPertanyaan;
+use App\Models\SKM\SKMHasil;
 
 class SKMCon extends Controller
 {
     public function index() {
         // Dapatkan semua data hasil SKM
-        $hasil_skm = SKMJawabanPertanyaan::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'desc')->get();
+        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'desc')->get();
         
         // Hitung nilai IKM berjalan (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
         $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.id');
@@ -333,7 +333,7 @@ class SKMCon extends Controller
         // Simpan data jawaban jika semua pertanyaan terjawab
         if (count($input["survey"]["jawaban"]) == count($all_pertanyaan)) {
             foreach ($input["survey"]["jawaban"] as $key => $value) {
-                SKMJawabanPertanyaan::create([
+                SKMHasil::create([
                     'skm_pertanyaan_id' => $key,
                     'skm_pilihan_jawaban_id' => $value,
                     'skm_responden_id' => $responden['id'],
@@ -349,11 +349,11 @@ class SKMCon extends Controller
         // Dapatkan id data hasil survey dari delete request:
         $input = $request->id;
         // Cek keberadaan data di database
-        $hasil_skm = SKMJawabanPertanyaan::find($input);
+        $hasil_skm = SKMHasil::find($input);
         // Hapus semua jawaban pertanyaan terkait berdasarkan id responden agar tidak terjadi kejanggalan data
         // mengingat responden wajib menjawab semua pertanyaan:
         if ($hasil_skm) {
-            SKMJawabanPertanyaan::where('skm_responden_id', $hasil_skm['skm_responden_id'])->delete();
+            SKMHasil::where('skm_responden_id', $hasil_skm['skm_responden_id'])->delete();
         }
         // Kembalikan json (karna request menggunakan ajax):
         return response()->json($hasil_skm);
@@ -361,7 +361,7 @@ class SKMCon extends Controller
     
     public function buatLaporanSKM(Request $request) {
         $input = $request->all();
-        $hasil_skm = SKMJawabanPertanyaan::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'asc')->get();
+        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'asc')->get();
         $unit_layanan;
         $awal_periode;
         $akhir_periode;

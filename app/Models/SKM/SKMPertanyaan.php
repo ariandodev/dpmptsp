@@ -39,8 +39,8 @@ class SKMPertanyaan extends Model
     /**
      * Get the jawaban pertanyaan for the pertanyaan.
      */
-    public function jawabanPertanyaan(): HasMany {
-        return $this->hasMany(SKMJawabanPertanyaan::class, 'skm_pertanyaan_id');
+    public function hasil(): HasMany {
+        return $this->hasMany(SKMHasil::class, 'skm_pertanyaan_id');
     }
 
     /**

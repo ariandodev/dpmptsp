@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SKMJawabanPertanyaan extends Model
+class SKMHasil extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,7 +16,7 @@ class SKMJawabanPertanyaan extends Model
      *
      * @var string
      */
-    protected $table = 'skm_jawaban_pertanyaan';
+    protected $table = 'skm_hasil';
 
     /**
      * The attributes that are mass assignable.
