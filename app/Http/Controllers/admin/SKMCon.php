@@ -18,10 +18,10 @@ class SKMCon extends Controller
 {
     public function index() {
         // Dapatkan semua data hasil SKM
-        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'pilihanJawaban', 'responden'])->orderBy('id', 'desc')->get();
+        $hasil_skm = SKMHasil::with(['layanan', 'pertanyaan', 'pilihanJawaban', 'responden', 'unsur', 'unitLayanan'])->orderBy('id', 'desc')->get();
         
         // Hitung nilai IKM berjalan (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
-        $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.id');
+        $data_per_unsur = $hasil_skm->groupBy('unsur.id');
         foreach ($data_per_unsur as $key => $value) {
             $value->put('jumlah_responden', $value->count('responden'));
             $value->put('nilai_per_unsur', $value->sum('pilihanJawaban.bobot'));
@@ -29,33 +29,17 @@ class SKMCon extends Controller
             $value->put('nilai_indeks_per_unsur', round($value['nilai_rerata_per_unsur']/9, 2));
         }
         $nilai_ikm_berjalan = round($data_per_unsur->sum('nilai_indeks_per_unsur')*25, 2);
-        $kinerja_pelayanan = 'Data tidak tersedia';
-        $mutu_pelayanan = 'Data tidak tersedia';
-        switch ($nilai_ikm_berjalan) {
-            case ($nilai_ikm_berjalan >= 25.00 && $nilai_ikm_berjalan <= 64.99):
-                $kinerja_pelayanan = 'Tidak Baik';
-                $mutu_pelayanan = 'D';
-                break;
-            case ($nilai_ikm_berjalan >= 65.00 && $nilai_ikm_berjalan <= 76.60):
-                $kinerja_pelayanan = 'Kurang Baik';
-                $mutu_pelayanan = 'C';
-                break;
-            case ($nilai_ikm_berjalan >= 76.61 && $nilai_ikm_berjalan <= 88.30):
-                $kinerja_pelayanan = 'Baik';
-                $mutu_pelayanan = 'B';
-                break;
-            case ($nilai_ikm_berjalan >= 88.31 && $nilai_ikm_berjalan <= 100.00):
-                $kinerja_pelayanan = 'Sangat Baik';
-                $mutu_pelayanan = 'A';
-                break;
-        }
+
+        // Dapatkan kinerja dan mutu pelayanan berdasarkan nilai ikm
+        $kinerja_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['kinerja'];
+        $mutu_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['mutu'];
 
         // Dapatkan semua data unit pelayanan
         $all_unit_layanan = SKMUnitLayanan::all();
 
         // Kembalikan view:
         return view('admin.skm.index', compact('hasil_skm', 'nilai_ikm_berjalan', 'kinerja_pelayanan', 'mutu_pelayanan', 'all_unit_layanan'));
-        // return response()->json($data_per_unsur);
+        //return response()->json($data_per_unsur);
     }
 
     public function kelolaDataLayanan() {
@@ -416,30 +400,18 @@ class SKMCon extends Controller
             $value->put('nilai_indeks_per_unsur', round($value['nilai_rerata_per_unsur']/9, 2));
         }
         $nilai_ikm = round($data_per_unsur->sum('nilai_indeks_per_unsur')*25, 2);
-        $kinerja_pelayanan;
-        $mutu_pelayanan;
-        switch ($nilai_ikm) {
-            case ($nilai_ikm >= 25.00 && $nilai_ikm <= 64.99):
-                $kinerja_pelayanan = 'Tidak Baik';
-                $mutu_pelayanan = 'D';
-                break;
-            case ($nilai_ikm >= 65.00 && $nilai_ikm <= 76.60):
-                $kinerja_pelayanan = 'Kurang Baik';
-                $mutu_pelayanan = 'C';
-                break;
-            case ($nilai_ikm >= 76.61 && $nilai_ikm <= 88.30):
-                $kinerja_pelayanan = 'Baik';
-                $mutu_pelayanan = 'B';
-                break;
-            case ($nilai_ikm >= 88.31 && $nilai_ikm <= 100.00):
-                $kinerja_pelayanan = 'Sangat Baik';
-                $mutu_pelayanan = 'A';
-                break;
-        }
+
+        // Dapatkan kinerja dan mutu pelayanan berdasarkan nilai ikm
+        $kinerja_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['kinerja'];
+        $mutu_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['mutu'];
+
+        // Set data awal periode dan akhir periode
         $awal_periode = $input['input-awal-periode'];
         if ($awal_periode == null) $awal_periode = '-';
         $akhir_periode = $input['input-akhir-periode'];
         if ($akhir_periode == null) $akhir_periode = '-';
+
+        // Buat data hasil SKM per responden
         $data_per_responden = $hasil_skm->groupBy('skm_responden_id');
 
         return view('admin.skm.laporan', compact('data_per_unsur', 'data_per_responden', 'nilai_ikm', 'kinerja_pelayanan', 'mutu_pelayanan', 'unit_layanan', 'awal_periode', 'akhir_periode'));

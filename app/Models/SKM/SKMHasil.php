@@ -73,4 +73,30 @@ class SKMHasil extends Model
     public function unitLayanan(): BelongsTo {
         return $this->belongsTo(SKMUnitLayanan::class, 'skm_unit_layanan_id');
     }
+
+    //  Fungsi statis untuk mendapatkan kinerja dan mutu pelayanan berdasarkan nilai IKM
+    public static function getKinerjaMutuPelayanan ($nilai_ikm) {
+        $kinerja = 'Data tidak tersedia';
+        $mutu = 'Data tidak tersedia';
+        switch ($nilai_ikm) {
+            case ($nilai_ikm >= 25.00 && $nilai_ikm <= 64.99):
+                $kinerja = 'Tidak Baik';
+                $mutu = 'D';
+                break;
+            case ($nilai_ikm >= 65.00 && $nilai_ikm <= 76.60):
+                $kinerja = 'Kurang Baik';
+                $mutu = 'C';
+                break;
+            case ($nilai_ikm >= 76.61 && $nilai_ikm <= 88.30):
+                $kinerja = 'Baik';
+                $mutu = 'B';
+                break;
+            case ($nilai_ikm >= 88.31 && $nilai_ikm <= 100.00):
+                $kinerja = 'Sangat Baik';
+                $mutu = 'A';
+                break;
+        }
+
+        return compact(['kinerja', 'mutu']);
+    }
 }
