@@ -316,7 +316,7 @@ class SKMCon extends Controller
         return view('admin.skm.simulasi', compact('all_layanan', 'all_pertanyaan'));
     }
 
-    public function simulasiSKM(Request $request) {
+    public function simpanDataSKM(Request $request) {
         // Dapatkan data survey dari post request:
         $input = $request->all();
         // Dapatkan semua data pertanyaan 

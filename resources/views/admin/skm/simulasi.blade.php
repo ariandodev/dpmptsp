@@ -224,7 +224,7 @@
             }
             if (Object.keys(survey.jawaban).length == $semuaPertanyaan.length) {
                 isLoading(true);
-                axios.post("{{ route('admin.skm.simulasiSKM') }}", {survey}).then((response) => {
+                axios.post("{{ route('admin.skm.simpanDataSKM') }}", {survey}).then((response) => {
                     console.log(response);
                     Swal.fire({
                         title: 'Survey telah terkirim, terimakasih atas partisipasi Anda!',

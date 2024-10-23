@@ -48,7 +48,7 @@ Route::prefix('admin')->group(function () {
             // Route simulasi
             Route::prefix('simulasi')->group(function () {
                 Route::get('/', 'simulasi')->name('admin.skm.simulasi');
-                Route::post('/', 'simulasiSKM')->name('admin.skm.simulasiSKM');
+                Route::post('/', 'simpanDataSKM')->name('admin.skm.simpanDataSKM');
                 Route::delete('/', 'hapusHasilSKM')->name('admin.skm.hapusHasilSKM');
             });
 
