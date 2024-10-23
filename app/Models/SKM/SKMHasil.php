@@ -27,34 +27,50 @@ class SKMHasil extends Model
         'skm_pertanyaan_id',
         'skm_pilihan_jawaban_id',
         'skm_responden_id',
-        'skm_layanan_id'
+        'skm_layanan_id',
+        'skm_unsur_id',
+        'skm_unit_layanan_id'
     ];
 
     /**
-     * Get the pertanyaan that owns the jawaban.
+     * Dapatkan data pertanyaan yang terkait dengan hasil
      */
     public function pertanyaan(): BelongsTo {
         return $this->belongsTo(SKMPertanyaan::class, 'skm_pertanyaan_id');
     }
 
     /**
-     * Get the pilihan jawaban that owns the jawaban.
+     * Dapatkan data pilihan jawaban yang terkait dengan hasil
      */
-    public function jawaban(): BelongsTo {
+    public function pilihanJawaban(): BelongsTo {
         return $this->belongsTo(SKMPilihanJawaban::class, 'skm_pilihan_jawaban_id');
     }
 
     /**
-     * Get the responden that owns the jawaban.
+     * Dapatkan data responden yang terkait dengan hasil
      */
     public function responden(): BelongsTo {
         return $this->belongsTo(SKMResponden::class, 'skm_responden_id');
     }
 
     /**
-     * Get the layanan that owns the jawaban.
+     * Dapatkan data layanan yang terkait dengan hasil
      */
     public function layanan(): BelongsTo {
         return $this->belongsTo(SKMLayanan::class, 'skm_layanan_id');
+    }
+
+    /**
+     * Dapatkan data unsur yang terkait dengan hasil
+     */
+    public function unsur(): BelongsTo {
+        return $this->belongsTo(SKMUnsur::class, 'skm_unsur_id');
+    }
+
+    /**
+     * Dapatkan data unit layanan yang terkait dengan hasil
+     */
+    public function unitLayanan(): BelongsTo {
+        return $this->belongsTo(SKMUnitLayanan::class, 'skm_unit_layanan_id');
     }
 }
