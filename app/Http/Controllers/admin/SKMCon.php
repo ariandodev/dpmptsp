@@ -353,46 +353,47 @@ class SKMCon extends Controller
     
     public function buatLaporanSKM(Request $request) {
         $input = $request->all();
-        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'pilihanJawaban', 'responden'])->orderBy('id', 'asc')->get();
-        $unit_layanan;
-        $awal_periode;
-        $akhir_periode;
+        $hasil_skm = SKMHasil::with(['layanan', 'pertanyaan', 'pilihanJawaban', 'responden', 'unsur', 'unitLayanan'])->orderBy('id', 'asc')->get();
+        
+        $input_unit_layanan = $input['input-unit-layanan'];
+        $input_awal_periode = $input['input-awal-periode'];
+        $input_akhir_periode = $input['input-akhir-periode'];
 
-        // Filter collection berdasarkan id unit layanan
-        if($input['input-unit-layanan']) {
-            $hasil_skm = $hasil_skm->where('layanan.skm_unit_layanan_id', $input['input-unit-layanan']);
+        // Dapatkan data unit layanan berdasarkan input
+        $unit_layanan = SKMUnitLayanan::find($input_unit_layanan);
+
+        // Filter data berdasarkan unit layanan jika unit layanan ditemukan
+        if($unit_layanan) {
+            $hasil_skm = $hasil_skm->where('skm_unit_layanan_id', $unit_layanan['id']);
+        } 
+
+        // Set nama unit layanan menjadi 'DPMPTSP' jika data unit layanan tidak ditemukan
+        if (empty($unit_layanan)) {
+            $unit_layanan = ['nama' => 'DPMPTSP'];
         }
 
-        // Return pemberitahuan jika setelah filter data tidak ditemukan
-        if (count($hasil_skm) < 1) {
-            return response()->json('Data tidak ditemukan'); 
-        }
-
-        // Dapatkan data unit layanan
-        $unit_layanan = SKMUnitLayanan::find($input['input-unit-layanan']);
-        if ($unit_layanan == null) {
-            $unit_layanan = 'DPMPTSP';
+        // Filter data berdasarkan input-awal-periode
+        if ($input_awal_periode) {
+            $hasil_skm = $hasil_skm->where('created_at', '>=', $input_awal_periode);
         } else {
-            $unit_layanan = $unit_layanan['nama'];
+            $input_awal_periode = '-';
         }
 
-        // Filter collection berdasarkan input-awal-periode 
-        if ($input['input-awal-periode']) {
-            $hasil_skm = $hasil_skm->where('created_at', '>=', $input['input-awal-periode']);
+        // Filter data berdasarkan input-akhir-periode
+        if ($input_akhir_periode) {
+            $hasil_skm = $hasil_skm->where('created_at', '<=', $input_akhir_periode);
+        } else {
+            $input_akhir_periode = '-';
         }
 
-        // Filter collection berdasarkan input-akhir-periode
-        if ($input['input-akhir-periode']) {
-            $hasil_skm = $hasil_skm->where('created_at', '<=', $input['input-akhir-periode']);
-        }
-
-        // Return pemberitahuan jika setelah filter data tidak ditemukan
+        // Return pemberitahuan jika setelah filter data berdasarkan awal periode dan/ atau akhir periode 
+        // tidak ditemukan
         if (count($hasil_skm) < 1) {
             return response()->json('Data tidak ditemukan'); 
         }
 
         // Hitung nilai IKM berdasarkan hasil filter (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
-        $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.unsur');
+        $data_per_unsur = $hasil_skm->groupBy('unsur.unsur');
         foreach ($data_per_unsur as $key => $value) {
             $value->put('jumlah_responden', $value->count('responden'));
             $value->put('nilai_per_unsur', $value->sum('pilihanJawaban.bobot'));
@@ -402,19 +403,14 @@ class SKMCon extends Controller
         $nilai_ikm = round($data_per_unsur->sum('nilai_indeks_per_unsur')*25, 2);
 
         // Dapatkan kinerja dan mutu pelayanan berdasarkan nilai ikm
-        $kinerja_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['kinerja'];
-        $mutu_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm_berjalan)['mutu'];
-
-        // Set data awal periode dan akhir periode
-        $awal_periode = $input['input-awal-periode'];
-        if ($awal_periode == null) $awal_periode = '-';
-        $akhir_periode = $input['input-akhir-periode'];
-        if ($akhir_periode == null) $akhir_periode = '-';
+        $kinerja_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm)['kinerja'];
+        $mutu_pelayanan = SKMHasil::getKinerjaMutuPelayanan($nilai_ikm)['mutu'];
 
         // Buat data hasil SKM per responden
         $data_per_responden = $hasil_skm->groupBy('skm_responden_id');
 
-        return view('admin.skm.laporan', compact('data_per_unsur', 'data_per_responden', 'nilai_ikm', 'kinerja_pelayanan', 'mutu_pelayanan', 'unit_layanan', 'awal_periode', 'akhir_periode'));
+        // Kembalikan view
+        return view('admin.skm.laporan', compact('data_per_unsur', 'data_per_responden', 'nilai_ikm', 'kinerja_pelayanan', 'mutu_pelayanan', 'unit_layanan', 'input_awal_periode', 'input_akhir_periode'));
         
         //return response()->json(compact('data_per_unsur', 'data_per_responden','nilai_ikm', 'kinerja_pelayanan', 'mutu_pelayanan'));
     }

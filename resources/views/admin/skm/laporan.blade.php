@@ -48,11 +48,11 @@
             <table class="table table-bordered" id="tabel-laporan-skm" style="font-size: 14px; vertical-align: middle">
                 <thead style="vertical-align: middle;">
                     <tr style="text-align: center">
-                        <th colspan="10"><b>Laporan SKM {{ $unit_layanan }}</b></th>
+                        <th colspan="10"><b>Laporan SKM {{ $unit_layanan['nama'] }}</b></th>
                     </tr>
                     <tr>
                         <th colspan="1">Periode SKM</th>
-                        <th colspan="9">{{ $awal_periode }} s.d. {{ $akhir_periode }}</th>
+                        <th colspan="9">{{ $input_awal_periode }} s.d. {{ $input_akhir_periode }}</th>
                     </tr>
                     <tr style="text-align: center">
                         <th rowspan="2">No. Responden</th>
