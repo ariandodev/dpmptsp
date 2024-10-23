@@ -20,7 +20,7 @@ class SKMCon extends Controller
         // Dapatkan semua data hasil SKM
         $hasil_skm = SKMJawabanPertanyaan::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'desc')->get();
         
-        // Hitung nilai IKM MPP berjalan (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
+        // Hitung nilai IKM berjalan (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
         $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.id');
         foreach ($data_per_unsur as $key => $value) {
             $value->put('jumlah_responden', $value->count('responden'));
@@ -379,7 +379,7 @@ class SKMCon extends Controller
         // Dapatkan data unit layanan
         $unit_layanan = SKMUnitLayanan::find($input['input-unit-layanan']);
         if ($unit_layanan == null) {
-            $unit_layanan = 'MPP';
+            $unit_layanan = 'DPMPTSP';
         } else {
             $unit_layanan = $unit_layanan['nama'];
         }

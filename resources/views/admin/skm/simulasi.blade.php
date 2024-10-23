@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <div class="pt-4 pb-2">
                         <h5 class="card-title text-center pb-0 fs-4">Survei Kepuasan Masyarakat (SKM)</h5>
-                        <p class="text-center small">Mohon meluangkan waktu Anda untuk mengisi SKM Mal Pelayanan Publik Kabupaten Pulang Pisau. Hasil SKM akan sangat berguna menjadi acuan bagi kami untuk meningkatkan kualitas pelayanan.</p>
+                        <p class="text-center small">Mohon meluangkan waktu Anda untuk mengisi SKM DPMPTSP Kabupaten Pulang Pisau. Hasil SKM akan sangat berguna menjadi acuan bagi kami untuk meningkatkan kualitas pelayanan.</p>
                     </div>
                     <div class="progress">
                         <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
