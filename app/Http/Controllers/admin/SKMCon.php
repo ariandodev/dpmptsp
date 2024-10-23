@@ -18,13 +18,13 @@ class SKMCon extends Controller
 {
     public function index() {
         // Dapatkan semua data hasil SKM
-        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'desc')->get();
+        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'pilihanJawaban', 'responden'])->orderBy('id', 'desc')->get();
         
         // Hitung nilai IKM berjalan (rumus hitung sesuai dengan Permenpan No. 14 Tahun 2017)
         $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.id');
         foreach ($data_per_unsur as $key => $value) {
             $value->put('jumlah_responden', $value->count('responden'));
-            $value->put('nilai_per_unsur', $value->sum('jawaban.bobot'));
+            $value->put('nilai_per_unsur', $value->sum('pilihanJawaban.bobot'));
             $value->put('nilai_rerata_per_unsur', round($value['nilai_per_unsur']/$value['jumlah_responden'], 2));
             $value->put('nilai_indeks_per_unsur', round($value['nilai_rerata_per_unsur']/9, 2));
         }
@@ -330,14 +330,22 @@ class SKMCon extends Controller
             'pekerjaan' => $input['survey']['responden']['input-pekerjaan']
         ]);
 
+        // Temukan data layanan
+        $layanan = SKMLayanan::find($input['survey']['responden']['input-layanan']);
+
         // Simpan data jawaban jika semua pertanyaan terjawab
         if (count($input["survey"]["jawaban"]) == count($all_pertanyaan)) {
             foreach ($input["survey"]["jawaban"] as $key => $value) {
+                // Temukan data pertanyaan 
+                $pertanyaan = SKMPertanyaan::find($key);
+                // Simpan data SKM
                 SKMHasil::create([
-                    'skm_pertanyaan_id' => $key,
+                    'skm_pertanyaan_id' => $pertanyaan['id'],
                     'skm_pilihan_jawaban_id' => $value,
                     'skm_responden_id' => $responden['id'],
-                    'skm_layanan_id' => $input['survey']['responden']['input-layanan']
+                    'skm_layanan_id' => $layanan['id'],
+                    'skm_unsur_id' => $pertanyaan['skm_unsur_id'],
+                    'skm_unit_layanan_id' => $layanan['skm_unit_layanan_id']
                 ]);
             }
         }
@@ -361,7 +369,7 @@ class SKMCon extends Controller
     
     public function buatLaporanSKM(Request $request) {
         $input = $request->all();
-        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'jawaban', 'responden'])->orderBy('id', 'asc')->get();
+        $hasil_skm = SKMHasil::with(['layanan.unitLayanan', 'pertanyaan.unsur', 'pilihanJawaban', 'responden'])->orderBy('id', 'asc')->get();
         $unit_layanan;
         $awal_periode;
         $akhir_periode;
@@ -403,7 +411,7 @@ class SKMCon extends Controller
         $data_per_unsur = $hasil_skm->groupBy('pertanyaan.unsur.unsur');
         foreach ($data_per_unsur as $key => $value) {
             $value->put('jumlah_responden', $value->count('responden'));
-            $value->put('nilai_per_unsur', $value->sum('jawaban.bobot'));
+            $value->put('nilai_per_unsur', $value->sum('pilihanJawaban.bobot'));
             $value->put('nilai_rerata_per_unsur', round($value['nilai_per_unsur']/$value['jumlah_responden'], 2));
             $value->put('nilai_indeks_per_unsur', round($value['nilai_rerata_per_unsur']/9, 2));
         }

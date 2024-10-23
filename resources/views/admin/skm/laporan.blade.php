@@ -69,7 +69,7 @@
                     <tr style="text-align: center">
                         <td>{{ $loop->iteration }}</td>
                         @foreach ($item as $jawaban)
-                        <td>{{ $jawaban->jawaban->bobot }}</td>
+                        <td>{{ $jawaban->pilihanJawaban->bobot }}</td>
                         @endforeach
                     </tr>
                     @endforeach

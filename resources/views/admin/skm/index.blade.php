@@ -78,13 +78,13 @@
                         </thead>
                         <tbody>
                             @foreach ($hasil_skm as $item)
-                            <tr @if ($item->jawaban->bobot == 4) class="table-info" @elseif ($item->jawaban->bobot == 3) class="table-primary" @elseif ($item->jawaban->bobot == 2) class="table-warning" @elseif ($item->jawaban->bobot == 1) class="table-danger" @endif>
+                            <tr @if ($item->pilihanJawaban->bobot == 4) class="table-info" @elseif ($item->pilihanJawaban->bobot == 3) class="table-primary" @elseif ($item->pilihanJawaban->bobot == 2) class="table-warning" @elseif ($item->pilihanJawaban->bobot == 1) class="table-danger" @endif>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->layanan->unitLayanan->nama }}</td>
                                 <td>{{ $item->layanan->nama }}</td>
                                 <td>{{ $item->pertanyaan->unsur->unsur }}</td>
-                                <td>{{ $item->jawaban->jawaban }}</td>
-                                <td>{{ $item->jawaban->bobot }}</td>
+                                <td>{{ $item->pilihanJawaban->jawaban }}</td>
+                                <td>{{ $item->pilihanJawaban->bobot }}</td>
                                 <td>{{ $item->responden->usia }}</td>
                                 <td>{{ $item->responden->jenis_kelamin }}</td>
                                 <td>{{ $item->responden->pekerjaan }}</td>
