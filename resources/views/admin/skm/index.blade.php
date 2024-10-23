@@ -32,7 +32,7 @@
                             <div class="col-md-4">
                                 <label for="input-unit-layanan" class="form-label">Pilih Unit Layanan</label>
                                 <select class="form-select" id="input-unit-layanan" name="input-unit-layanan">
-                                    <option value="">Semua (MPP)</option>
+                                    <option value="">Semua</option>
                                     @foreach ($all_unit_layanan as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
