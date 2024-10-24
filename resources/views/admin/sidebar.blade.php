@@ -34,5 +34,23 @@
                 </li>
             </ul>
         </li><!-- End SKM Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed users-links" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people"></i><span>Data Pengguna dan Hak Akses</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="users-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#" class="admin-users">
+                        <i class="bi bi-circle"></i><span>Data Pengguna</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.kelolaHakAkses') }}" class="admin-users-kelola-hak-akses">
+                        <i class="bi bi-circle"></i><span>Kelola Hak Akses</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Pengguna Nav -->
     </ul>
 </aside>

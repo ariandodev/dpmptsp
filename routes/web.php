@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\admin\UserCon;
 use App\Http\Controllers\admin\AdminCon;
 use App\Http\Controllers\admin\SKMCon;
 
@@ -13,6 +13,18 @@ Route::prefix('admin')->group(function () {
     Route::controller(AdminCon::class)->group(function () {
         Route::get('/', 'home')->name('admin.home');
     });
+
+    // Route users
+    Route::prefix('skm')->group(function () {
+        Route::controller(UserCon::class)->group(function () {
+            // Route::get('/', 'index')->name('admin.skm');
+
+            // Route data unit layanan dan layanan
+            Route::prefix('kelola-hak-akses')->group(function () {
+                Route::get('/', 'kelolaHakAkses')->name('admin.users.kelolaHakAkses');
+            });
+        });
+    }); // End route users
 
     // Route SKM
     Route::prefix('skm')->group(function () {
@@ -55,5 +67,5 @@ Route::prefix('admin')->group(function () {
             // Route buat laporan SKM
             Route::post('buat-laporan', 'buatLaporanSKM')->name('admin.skm.buatLaporanSKM');
         });
-    });
+    }); // End route SKM
 });

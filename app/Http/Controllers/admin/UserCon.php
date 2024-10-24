@@ -18,5 +18,7 @@ class UserCon extends Controller
     public function kelolaHakAkses() {
         $roles = Role::all();
         $permissions = Permission::all();
+
+        return view('admin.users.kelola_hak_akses', compact('roles', 'permissions'));
     }
 }
