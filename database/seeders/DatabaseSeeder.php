@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
+use App\Models\RolePermission;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -15,15 +18,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('12345678'),
-            'role_id' => 1,
+        // Buat data role Super Admin
+        DB::table('roles')->insert([
+            'role' => 'Super Admin',
         ]);
 
+        // Buat data user Super Admin dengan role Super Admin
+        $role = Role::where('role', 'Super Admin')->first();
+        User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@admin.com',
+            'password' => Hash::make('12345678'),
+            'role_id' => $role['id'],
+        ]);
+
+        // Buat data permissions
         DB::table('permissions')->insert([
             'permission' => 'dashboard',
         ]);
@@ -53,5 +62,16 @@ class DatabaseSeeder extends Seeder
         DB::table('permissions')->insert([
             'permission' => 'kelola_hak_akses',
         ]);
+
+        // Buat data role_permission untuk role Super Admin (semua permission tersedia sejak awal untuk Super Admin)
+        $permissions = Permission::all();
+        if (count($permissions) > 1) {
+            foreach ($permissions as $key => $value) {
+                DB::table('role_permission')->insert([
+                    'role_id' => $role['id'],
+                    'permission_id' => $value['id'],
+                ]);
+            }
+        }
     }
 }
