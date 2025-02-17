@@ -15,15 +15,15 @@
 
 <section class="section dashboard">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Permisssions (akses) <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-tambah-permission"><i class="bi bi-plus-circle"></i> Baru</button></h5>
+                    <h5 class="card-title">Roles (peran) <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-tambah-permission"><i class="bi bi-plus-circle"></i> Baru</button></h5>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Permission</th>
+                                <th scope="col">Role</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
@@ -63,39 +63,24 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Roles (peran) <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-tambah-role"><i class="bi bi-plus-circle"></i> Baru</button></h5>
+                    <h5 class="card-title">Daftar Permissions (akses) <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-tambah-role"><i class="bi bi-plus-circle"></i> Baru</button></h5>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col">Permission</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Super Admin</td>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="aksi">
-                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-edit-role" data-bs-role-id="1" data-bs-role="Super Admin"><i class="bi bi-pencil-square"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-hapus-role" data-bs-role-id="1" data-bs-role="Super Admin"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
+                            @foreach ($permissions as $permission)
+                            <tr id="{{ $permission->id }}">
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $permission->permission }}</td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Pengolah Data SKM</td>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="aksi">
-                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-edit-role" data-bs-role-id="2" data-bs-role="Admin SKM"><i class="bi bi-pencil-square"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-hapus-role" data-bs-role-id="2" data-bs-role="Admin SKM"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
